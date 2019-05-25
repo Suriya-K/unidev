@@ -4,10 +4,12 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 class UniDev extends CI_Controller {
     public $template;
     public $overflow;
+    public $pdf;
     public function __construct() {
         parent::__construct();  
         $this->overflow="overflow/";
-        $this->template="template/";  
+        $this->template="template/";
+        $this->pdf="pdf/";   
     }
 	public function index()
 	{
@@ -29,6 +31,21 @@ class UniDev extends CI_Controller {
         $this->header();
         $this->load->view($view,$data,$get);
         $this->footer();
+    }
+    public function testPdf()
+    {
+        $this->Th_pdf($this->load->view($this->pdf.'html_to_pdf',[],true));
+    }
+
+    public function Th_pdf($pdf)
+    {
+        $mpdf = new \Mpdf\Mpdf();
+        $mpdf->useAdobeCJK = true;
+        $mpdf->autoScriptToLang = true;
+        $mpdf->autoLangToFont = true;
+
+        $mpdf->WriteHTML($pdf);
+        $mpdf->Output();
     }
    
 }
